@@ -4,9 +4,9 @@ class CreateOrders < ActiveRecord::Migration[5.2]
       t.integer :itemId
       t.string :description
       t.integer :customerId
-      t.integer :price
-      t.integer :award
-      t.integer :total
+      t.float :price
+      t.float :award
+      t.float :total
 
       t.timestamps
     end

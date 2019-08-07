@@ -16,9 +16,9 @@ ActiveRecord::Schema.define(version: 2019_08_05_163448) do
     t.integer "itemId"
     t.string "description"
     t.integer "customerId"
-    t.integer "price"
-    t.integer "award"
-    t.integer "total"
+    t.float "price"
+    t.float "award"
+    t.float "total"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
