@@ -1,11 +1,18 @@
 require 'httparty'
 
 class OrdersClient
-    
-   base_uri "http://localhost:8080"
+    include HTTParty
+    base_uri "http://localhost:8080"
     format :json
     headers 'Content-Type' => 'application/json'
+end
     
+
+class CustomersClient
+    include HTTParty
+    base_uri "http://localhost:8081"  # host:port for customer app
+    format :json
+    headers 'Content-Type' => 'application/json'
     
     
     def self.register(cust)
@@ -20,13 +27,19 @@ class OrdersClient
     def self.getId(id)
         get "/customers?id=#{id}",   headers: { 'Content-Type' => 'application/json', 'ACCEPT' => 'application/json' } 
     end
-    
+end
+
+class ItemsClient
+    include HTTParty
+    base_uri "http://localhost:8082"  # host:port for item app
+    format :json
+    headers 'Content-Type' => 'application/json'
     
     def self.createItem(params)
         post '/items', body: params.to_json
     end
     
-    def ItemClient.retrieveItem(params)
+    def self.retrieveItem(params)
         if params[:id] == 'all'
           get '/items'
         else
@@ -62,32 +75,32 @@ while true
         when 'register'
             puts 'you want to register a new customer, now enter last name, first name, and email for new customer'
             cdata = gets.chomp!.split()
-            response = CustomerClient.register(lastName: cdata[0], firstName: cdata[1], email: cdata[2])
+            response = CustomersClient.register(lastName: cdata[0], firstName: cdata[1], email: cdata[2])
             puts "status code #{response.code}"
             puts response.body
             
         when 'email'
             puts 'Enter email'
             email = gets.chomp!
-            response = CustomerClient.getEmail(email)
+            response = CustomersClient.getEmail(email)
             puts "status code #{response.code}"
             puts response.body
             
         when 'id'
             puts 'Enter id'
             id = gets.chomp!
-            response = CustomerClient.getId(id)
+            response = CustomersClient.getId(id)
             puts "status code #{response.code}"
             puts response.body
         
         when 'createNewItem'
             props = get_props :description, :price, :stockQty
 
-            puts_response ItemClien.createItem props
+            puts_response ItemsClient.createItem props
         when 'lookupItem'
             props = get_props :id
 
-            puts_response ItemClient.retrieveItem props
+            puts_response ItemsClient.retrieveItem props
         
     end
 end
