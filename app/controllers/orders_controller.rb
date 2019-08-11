@@ -1,4 +1,4 @@
-class OrdersControler < ApplicationController
+class OrdersController < ActionController::API
    
    # GET /orders/ :id
    def show 
@@ -17,7 +17,7 @@ class OrdersControler < ApplicationController
        customerId = params['customerId']
        email = params['email']
        if !email.nil?
-           code, customer = CustomerHelper.getCustomerByEmail(email)
+           code, customer = Customer.getCustomerByEmail(email)
            if code != 200
                render json: {error: "Customer email not found. #{email}" }, status: 400
                return
@@ -34,14 +34,14 @@ class OrdersControler < ApplicationController
    
    def create
        @order = Order.new
-       code, customer = CustomerHelper.getCustomerByEmail( params[:email])
+       code, customer = Customer.getCustomerByEmail( params[:email])
        
        if code != 200
            render json: { error: "Customer email not found. #{ params[:email] }" }, status: 400
            return
        end
        
-       code, item = ItemHelper.getItemById (params[:itemId])
+       code, item = Item.getItemById (params[:itemId])
        if code != 200
            render json: { error: "Item id not found. #{ params[:itemId]}" }, status: 400
            return

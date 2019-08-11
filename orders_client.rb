@@ -5,6 +5,10 @@ class OrdersClient
     base_uri "http://localhost:8080"
     format :json
     headers 'Content-Type' => 'application/json'
+    
+    def self.createorder(neworder)
+        post '/orders', body: neworder.to_json,   headers:{ 'Content-Type' => 'application/json', 'ACCEPT' => 'application/json' }
+    end
 end
     
 
@@ -33,7 +37,7 @@ class ItemsClient
     include HTTParty
     base_uri "http://localhost:8082"  # host:port for item app
     format :json
-    headers 'Content-Type' => 'application/json'
+    headers 'Content-Type' => 'application/json', 'ACCEPT' => 'application/json'
     
     def self.createItem(params)
         post '/items', body: params.to_json
@@ -67,11 +71,20 @@ end
 
 
 while true
-    puts "What do you want to do: register, email, id or quit"
+    puts "What do you want to do: create order, create new item, lookup item, register, email, id or quit"
     cmd = gets.chomp!
     case cmd
         when 'quit'
             break
+            
+        # o create a new order
+        when 'create order'
+            puts 'Enter email and item id'
+            cdata = gets.chomp!.split()
+            response = OrdersClient.createorder(email: cdata[0], itemId: cdata[1])
+            puts "status code #{response.code}"
+            puts response.body
+            
         when 'register'
             puts 'you want to register a new customer, now enter last name, first name, and email for new customer'
             cdata = gets.chomp!.split()
@@ -93,11 +106,11 @@ while true
             puts "status code #{response.code}"
             puts response.body
         
-        when 'createNewItem'
+        when 'create new item'
             props = get_props :description, :price, :stockQty
 
             puts_response ItemsClient.createItem props
-        when 'lookupItem'
+        when 'lookup item'
             props = get_props :id
 
             puts_response ItemsClient.retrieveItem props
@@ -110,5 +123,5 @@ end
 # o retrieve an existing order by orderId, customerId, or customer email
 # o register a new customer  --CHECK
 # o lookup a customer by id or by email -- CHECK
-# o create a new item
-# o lookup an item by item id
+# o create a new item-- CHECK
+# o lookup an item by item id-- CHECK
