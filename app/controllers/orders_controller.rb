@@ -1,10 +1,9 @@
 class OrdersController < ActionController::API
-   
    # GET /orders/ :id
    def show 
        order = Order.find_by(id: params[:id])
        if order.nil?
-           render json: { error: "Order not found. #{ params[:id]}"}, status: 404
+           render json: { error: "Order not found. #{params[:id]}"}, status: 404
        else
            render json: order, status: 200
        end
@@ -16,14 +15,16 @@ class OrdersController < ActionController::API
    def search
        customerId = params['customerId']
        email = params['email']
-       if !email.nil?
-           code, customer = Customer.getCustomerByEmail(email)
+
+       unless email.nil?
+           code, customer = Customer.getCustomerByEmail email
            if code != 200
-               render json: {error: "Customer email not found. #{email}" }, status: 400
+               render json: {error: "Customer email not found. #{email}"}, status: 400
                return
            end
            customerId = customer[:id]
        end
+
        orders = Order.where(customerId: customerId)
        render json: orders, status: 200
    end
@@ -34,14 +35,14 @@ class OrdersController < ActionController::API
    
    def create
        @order = Order.new
-       code, customer = Customer.getCustomerByEmail( params[:email])
+       code, customer = Customer.getCustomerByEmail params[:email]
        
        if code != 200
            render json: { error: "Customer email not found. #{ params[:email] }" }, status: 400
            return
        end
        
-       code, item = Item.getItemById (params[:itemId])
+       code, item = Item.getItemById params[:itemId]
        if code != 200
            render json: { error: "Item id not found. #{ params[:itemId]}" }, status: 400
            return
@@ -68,5 +69,4 @@ class OrdersController < ActionController::API
       end
        
    end
-   
 end
