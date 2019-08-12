@@ -19,7 +19,7 @@ class OrdersController < ActionController::API
        unless email.nil?
            code, customer = Customer.getCustomerByEmail email
            if code != 200
-               render json: {error: "Customer email not found. #{email}"}, status: 400
+               render json: [], status: 200
                return
            end
            customerId = customer[:id]
