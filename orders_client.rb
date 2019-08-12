@@ -9,6 +9,18 @@ class OrdersClient
     def self.createorder(neworder)
         post '/orders', body: neworder.to_json,   headers:{ 'Content-Type' => 'application/json', 'ACCEPT' => 'application/json' }
     end
+    
+    def self.getOrderById(orderId)
+        get "/orders?id=#{orderId}" ,   headers: { 'Content-Type' => 'application/json', 'ACCEPT' => 'application/json' }  
+    end
+    
+    def self.getOrderByEmail(email)
+        get "/orders?email=#{email}" ,   headers: { 'Content-Type' => 'application/json', 'ACCEPT' => 'application/json' }  
+    end
+    
+    def self.getOrderByCustomerId(customerId)
+        get "/orders?customerId=#{customerId}" ,   headers: { 'Content-Type' => 'application/json', 'ACCEPT' => 'application/json' }  
+    end
 end
     
 
@@ -71,11 +83,34 @@ end
 
 
 while true
-    puts "What do you want to do: create order, create new item, lookup item, register, email, id or quit"
+    puts "What do you want to do: create order, lookup order by id, lookup order by email, lookup order by customer id, create new item, lookup item, register, email, id or quit"
     cmd = gets.chomp!
     case cmd
         when 'quit'
             break
+        # lookup order by customer id
+        when 'lookup order by customer id'
+            puts 'Enter customer id'
+            customerId = gets.chomp!
+            response = OrdersClient.getOrderByCustomerId(customerId)
+            puts "status code #{response.code}"
+            puts response.body
+            
+        # lookup order by email
+        when 'lookup order by email'
+            puts 'Enter order email'
+            email = gets.chomp!
+            response = OrdersClient.getOrderByEmail(email)
+            puts "status code #{response.code}"
+            puts response.body
+            
+        # lookup order by id
+        when 'lookup order by id'
+            puts 'Enter order by id'
+            orderId = gets.chomp!
+            response = OrdersClient.getOrderById(orderId)
+            puts "status code #{response.code}"
+            puts response.body
             
         # o create a new order
         when 'create order'
