@@ -17,18 +17,6 @@ class OrdersClient
     def self.getBy(value, type = 'customerId')
         get "/orders?#{type}=#{value}", headers: headers
     end
-    
-    def self.getOrderById(orderId)
-        get "/orders?id=#{orderId}" ,   headers: { 'Content-Type' => 'application/json', 'ACCEPT' => 'application/json' }  
-    end
-    
-    def self.getOrderByEmail(email)
-        get "/orders?email=#{email}" ,   headers: { 'Content-Type' => 'application/json', 'ACCEPT' => 'application/json' }  
-    end
-    
-    def self.getOrderByCustomerId(customerId)
-        get "/orders?customerId=#{customerId}" ,   headers: { 'Content-Type' => 'application/json', 'ACCEPT' => 'application/json' }  
-    end
 end
 
 class CustomersClient
